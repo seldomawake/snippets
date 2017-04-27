@@ -1,0 +1,4 @@
+"user_id","email","col_1","col_2"
+"1,000",email@address.com,4,"{2,3,4,5}"
+"1,001",email@address.com,5,"{1,2,3,4,5}"
+"1,002",email@address.com,1,"{4}"
