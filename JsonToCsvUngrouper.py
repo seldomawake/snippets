@@ -1,6 +1,7 @@
+import sys
 import csv
 import json
-
+import getopt
 
 class JsonToCsvUngrouper:
 
@@ -64,3 +65,24 @@ class JsonToCsvUngrouper:
         unwrap_more = self.explode_rows(unwrapped_rows, col_nums_to_explode_by)
 
         return unwrap_more
+
+
+if __name__ == '__main__':
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], 'f:c:', ['file=', 'column='])
+    except getopt.GetoptError:
+        sys.exit(2)
+
+    for opt, arg in opts:
+        if opt in ('-f', '--file'):
+            file_name = arg
+        elif opt in ('-c', '--column'):
+            column = arg
+        else:
+            sys.exit(2)
+
+    j = JsonToCsvUngrouper(file_name, column)
+    exploded_rows = []
+    for r in j.get_exploded_rows():
+        exploded_rows.append(r)
+        print r
