@@ -12,3 +12,7 @@ class S3Utilities:
         connection = client('s3')
         bucket_list = connection.list_buckets()
         return [x['Name'] for x in bucket_list['Buckets']]
+
+    @staticmethod
+    def find_files_in_bucket(to_match='*'):
+        return []
