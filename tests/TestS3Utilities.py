@@ -14,7 +14,9 @@ class TestS3Utilities(unittest.TestCase):
         self.assertGreater(len(buckets), 0)
 
     def test_list_buckets_with_name(self):
-        to_find = '*2017-02*'
-        files_found = S3Utilities.find_files_in_bucket(to_match=to_find)
+        to_find = '07_2017'
+        bucket_to_test = '' # todo: use environment variable here
+        files_found = S3Utilities.find_files_in_bucket(bucket_name=bucket_to_test, substring_to_match=to_find)
+        # print(files_found)
         self.assertGreater(len(files_found), 0)
 
