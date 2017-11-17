@@ -26,6 +26,10 @@
   <input type="number" min="0" max="10" step="0.05" value="1" style="width: 50px" id="rValue">
   <!-- <input type="button" id="update" value="Atualizar"> -->
 </p>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
 <script src="http://d3js.org/d3.v4.min.js"></script>
 <script>;
 
@@ -132,6 +136,7 @@ function updateData() {
     if (error) throw error;
 
     // console.log(data);
+    //data = data.filter(function(d){ return d.Leitura != null })
 
     data["columns"].push("SensorT","FiltroT");
 
@@ -185,8 +190,8 @@ function updateData() {
     
 
     serie.enter().append("path")
-        .transition()
-        .duration(15000)
+        //.transition()
+        //.duration(15000)
         .attr("class", "line")
         .attr("d", function(d) { return line(d.values); })
         .style("stroke", function(d) { return z(d.id); });
