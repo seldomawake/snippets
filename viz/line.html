@@ -1,0 +1,74 @@
+<html>
+<head>
+    </head>
+<body>
+    Hello World!
+    <div class="container" id="line">
+    </div>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" type="text/css" href="./britecharts/dist/css/britecharts.css">
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.js"
+      integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+      crossorigin="anonymous"></script>
+    <script src="http://d3js.org/d3.v4.min.js"></script>
+    <script src="./britecharts/dist/bundled/britecharts.min.js"></script>
+<body>
+  <div class="js-bar-container"></div>
+  <div class="js-donut-container"></div>
+</body>
+</html>
+
+<script type="text/javascript">
+const data = [
+  { name: 'Shiny', id: 1, quantity: 86, percentage: 5 },
+  { name: 'Blazing', id: 2, quantity: 300, percentage: 18 },
+  { name: 'Dazzling', id: 3, quantity: 276, percentage: 16 },
+  { name: 'Radiant', id: 4, quantity: 195, percentage: 11 },
+  { name: 'Sparkling', id: 5, quantity: 36, percentage: 2 },
+  { name: 'Other', id: 0, quantity: 814, percentage: 48 }
+];
+
+function createHorizontalBarChart() {
+    let barChart = britecharts.bar(),
+        margin = {
+                left: 120,
+                right: 20,
+                top: 20,
+                bottom: 30
+        },
+        barContainer = d3.select('.js-bar-container'),
+        containerWidth = barContainer.node() ? barContainer.node().getBoundingClientRect().width : false;
+
+    barChart
+       .isHorizontal(true)
+       .margin(margin)
+       .width(containerWidth)
+       .colorSchema(britecharts.colors.colorSchemas.britecharts)
+       .valueLabel('percentage')
+       .height(300);
+
+    barContainer.datum(data).call(barChart);
+}
+
+function createDonutChart() {
+  let donutChart = britecharts.donut();
+
+  donutChart
+    .width(400)
+    .height(300);
+
+  d3.select('.js-donut-container').datum(data).call(donutChart);
+
+}
+
+createHorizontalBarChart();
+createDonutChart();
+</script>
