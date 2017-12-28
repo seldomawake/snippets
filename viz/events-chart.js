@@ -101,12 +101,13 @@ d3.gantt = function(w, h, base_group_id, time_period_start, time_period_end, t) 
         return (x(d.endDate) - x(d.startDate)); 
       });
 
+      /* - Removing x-axis for now
       svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0, " + (height - margin.top - margin.bottom) + ")")
         .transition()
         .call(xAxis);
-
+      */
       svg.append("g").attr("class", "y axis").transition().call(yAxis);
 
       return gantt;
