@@ -16,6 +16,19 @@
   fill: steelblue;
 }
 
+.bar-busy {
+	fill: #CC0000;
+}
+ 
+.bar-moderate {
+	fill: #669900;
+}
+ 
+.bar-open {
+	fill: #33b5e5;
+}
+ 
+
 </style>
 <svg width="960" height="800"></svg>
 <script src="http://d3js.org/d3.v4.min.js"></script>
@@ -45,42 +58,28 @@ createDemandChart();
 
 function createEventChart()
 {
-    var tasks = [
-    {"startDate":new Date("Sun Dec 09 01:36:45 EST 2012"),"endDate":new Date("Sun Dec 09 02:36:45 EST 2012"),"taskName":"E Job","status":"RUNNING"},
-    {"startDate":new Date("Sun Dec 09 04:56:32 EST 2012"),"endDate":new Date("Sun Dec 09 06:35:47 EST 2012"),"taskName":"A Job","status":"RUNNING"},
-    {"startDate":new Date("Sun Dec 09 06:29:53 EST 2012"),"endDate":new Date("Sun Dec 09 06:34:04 EST 2012"),"taskName":"D Job","status":"RUNNING"},
-    {"startDate":new Date("Sun Dec 09 05:35:21 EST 2012"),"endDate":new Date("Sun Dec 09 06:21:22 EST 2012"),"taskName":"P Job","status":"RUNNING"},
-    {"startDate":new Date("Sun Dec 09 05:00:06 EST 2012"),"endDate":new Date("Sun Dec 09 05:05:07 EST 2012"),"taskName":"D Job","status":"RUNNING"},
-    {"startDate":new Date("Sun Dec 09 03:46:59 EST 2012"),"endDate":new Date("Sun Dec 09 04:54:19 EST 2012"),"taskName":"P Job","status":"RUNNING"},
-    {"startDate":new Date("Sun Dec 09 04:02:45 EST 2012"),"endDate":new Date("Sun Dec 09 04:48:56 EST 2012"),"taskName":"N Job","status":"RUNNING"},
-    {"startDate":new Date("Sun Dec 09 03:27:35 EST 2012"),"endDate":new Date("Sun Dec 09 03:58:43 EST 2012"),"taskName":"E Job","status":"SUCCEEDED"},
-    {"startDate":new Date("Sun Dec 09 01:40:11 EST 2012"),"endDate":new Date("Sun Dec 09 03:26:35 EST 2012"),"taskName":"A Job","status":"SUCCEEDED"},
-    {"startDate":new Date("Sun Dec 09 03:00:03 EST 2012"),"endDate":new Date("Sun Dec 09 03:09:51 EST 2012"),"taskName":"D Job","status":"SUCCEEDED"},
-    {"startDate":new Date("Sun Dec 09 01:21:00 EST 2012"),"endDate":new Date("Sun Dec 09 02:51:42 EST 2012"),"taskName":"P Job","status":"SUCCEEDED"},
-    {"startDate":new Date("Sun Dec 09 01:08:42 EST 2012"),"endDate":new Date("Sun Dec 09 01:33:42 EST 2012"),"taskName":"N Job","status":"FAILED"},
-    {"startDate":new Date("Sun Dec 09 00:27:15 EST 2012"),"endDate":new Date("Sun Dec 09 00:54:56 EST 2012"),"taskName":"E Job","status":"SUCCEEDED"},
-    {"startDate":new Date("Sun Dec 09 00:29:48 EST 2012"),"endDate":new Date("Sun Dec 09 00:44:50 EST 2012"),"taskName":"D Job","status":"SUCCEEDED"},
-    {"startDate":new Date("Sun Dec 09 07:39:21 EST 2012"),"endDate":new Date("Sun Dec 09 07:43:22 EST 2012"),"taskName":"P Job","status":"RUNNING"},
-    {"startDate":new Date("Sun Dec 09 07:00:06 EST 2012"),"endDate":new Date("Sun Dec 09 07:05:07 EST 2012"),"taskName":"D Job","status":"RUNNING"},
-    {"startDate":new Date("Sun Dec 09 08:46:59 EST 2012"),"endDate":new Date("Sun Dec 09 09:54:19 EST 2012"),"taskName":"P Job","status":"RUNNING"},
-    {"startDate":new Date("Sun Dec 09 09:02:45 EST 2012"),"endDate":new Date("Sun Dec 09 09:48:56 EST 2012"),"taskName":"N Job","status":"RUNNING"},
-    {"startDate":new Date("Sun Dec 09 08:27:35 EST 2012"),"endDate":new Date("Sun Dec 09 08:58:43 EST 2012"),"taskName":"E Job","status":"SUCCEEDED"},
-    {"startDate":new Date("Sun Dec 09 08:40:11 EST 2012"),"endDate":new Date("Sun Dec 09 08:46:35 EST 2012"),"taskName":"A Job","status":"SUCCEEDED"},
-    {"startDate":new Date("Sun Dec 09 08:00:03 EST 2012"),"endDate":new Date("Sun Dec 09 08:09:51 EST 2012"),"taskName":"D Job","status":"SUCCEEDED"},
-    {"startDate":new Date("Sun Dec 09 10:21:00 EST 2012"),"endDate":new Date("Sun Dec 09 10:51:42 EST 2012"),"taskName":"P Job","status":"SUCCEEDED"},
-    {"startDate":new Date("Sun Dec 09 11:08:42 EST 2012"),"endDate":new Date("Sun Dec 09 11:33:42 EST 2012"),"taskName":"N Job","status":"FAILED"},
-    {"startDate":new Date("Sun Dec 09 12:27:15 EST 2012"),"endDate":new Date("Sun Dec 09 12:54:56 EST 2012"),"taskName":"E Job","status":"SUCCEEDED"},
-    {"startDate":new Date("Sat Dec 08 23:12:24 EST 2012"),"endDate":new Date("Sun Dec 09 00:26:13 EST 2012"),"taskName":"A Job","status":"KILLED"}];
+    getEventAndPriceData();
+}
 
+function getEventAndPriceData(){
+    // get events. Remembering that the month is 0-based (0 = January) in Javascript would have saved me a lot of time here.
+    var tasks = [
+    {"startDate":new Date(2017, 03, 25), "endDate":new Date(2017, 03, 27), "taskName":"Type 1", "status":"OPEN"},
+    {"startDate":new Date(2017, 04, 02), "endDate":new Date(2017, 04, 06), "taskName":"Type 2", "status":"MODERATE"},
+    {"startDate":new Date(2017, 04, 24), "endDate":new Date(2017, 04, 31), "taskName":"Type 3", "status":"BUSY"}
+    ];
+
+    // lookup from task type to CSS class for box on gantt chart
     var taskStatus = {
-        "SUCCEEDED" : "bar",
-        "FAILED" : "bar-failed",
-        "RUNNING" : "bar-running",
-        "KILLED" : "bar-killed"
+        "BUSY" : "bar-busy",
+        "MODERATE" : "bar-moderate",
+        "OPEN" : "bar-open",
     };
 
-    var taskNames = [ "D Job", "P Job", "E Job", "A Job", "N Job" ];
+    // This sets the x-axis
+    var taskNames = [ "Type 1", "Type 2", "Type 3" ];
 
+    /*
     tasks.sort(function(a, b) {
         return a.endDate - b.endDate;
     });
@@ -91,9 +90,28 @@ function createEventChart()
     var minDate = tasks[0].startDate;
 
     var format = "%H:%M";
+    */
+    getPriceData(tasks, taskStatus, taskNames);
+}
 
-    var gantt = d3.gantt(width, events_height, '#events').taskTypes(taskNames).taskStatus(taskStatus).tickFormat(format);
-    gantt(tasks);
+function getPriceData(tasks, taskStatus, taskNames)
+{
+    d3.tsv("synchronized-chart-data.tsv", function(d){ renderEventChart(tasks, taskStatus, taskNames, d) });
+}
+
+function renderEventChart(tasks, taskStatus, taskNames, gantt_data){
+    
+    // get min and max dates
+    var minDate;
+    var maxDate;
+    var gantt_data;
+
+    gantt_data.forEach(function(d){ d.date = Date.parse(d.date); })
+    minDate = new Date(d3.min(gantt_data.map(x => x.date)))
+    maxDate = new Date(d3.max(gantt_data.map(x => x.date)))
+
+    var gantt = d3.gantt(width, events_height, '#events', minDate, maxDate, tasks).taskTypes(taskNames).taskStatus(taskStatus);
+    gantt();
 }
 
 function createDemandChart()

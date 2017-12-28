@@ -1,6 +1,7 @@
-d3.gantt = function(w, h, base_group_id) {
+d3.gantt = function(w, h, base_group_id, time_period_start, time_period_end, t) {
   var FIT_TIME_DOMAIN_MODE = "fit";
   var FIXED_TIME_DOMAIN_MODE = "fixed";
+  var SPECIFIED_TIME_DOMAIN_MODE = "specified"
 
   var margin = {
     top : 20,
@@ -10,14 +11,15 @@ d3.gantt = function(w, h, base_group_id) {
   };
   var timeDomainStart = d3.timeDay.offset(new Date(),-3);
   var timeDomainEnd = d3.timeHour.offset(new Date(),+3);
-  var timeDomainMode = FIT_TIME_DOMAIN_MODE;// fixed or fit
+  var timeDomainMode = SPECIFIED_TIME_DOMAIN_MODE;// fixed or fit
   var taskTypes = [];
   var taskStatus = [];
   var width = w;
   var height = h;
   var group_id_to_draw = base_group_id;
   var tickFormat = "%H:%M";
-  var tasks;
+  var tasks = t;
+  var x, y, xAxis, yAxis;
 
   var keyFunction = function(d) {
     return d.startDate + d.taskName + d.endDate;
@@ -27,11 +29,19 @@ d3.gantt = function(w, h, base_group_id) {
     return "translate(" + x(d.startDate) + "," + y(d.taskName) + ")";
   };
 
-  var x, y, xAxis, yAxis;
-
-  initAxis();
 
   var initTimeDomain = function() {
+
+    if (timeDomainMode === SPECIFIED_TIME_DOMAIN_MODE){
+        if(time_period_start == null || time_period_end == null){
+            timeDomainMode = FIT_TIME_DOMAIN_MODE;
+        }
+        else{
+            timeDomainStart = time_period_start;
+            timeDomainEnd = time_period_end;
+        }
+    }
+
     if (timeDomainMode === FIT_TIME_DOMAIN_MODE) {
       if (tasks === undefined || tasks.length < 1) {
         timeDomainStart = d3.time.day.offset(new Date(), -3);
@@ -54,15 +64,14 @@ d3.gantt = function(w, h, base_group_id) {
 
     y = d3.scaleBand().domain(taskTypes).rangeRound([ 0, height - margin.top - margin.bottom ], .1);
 
-    xAxis = d3.axisBottom().scale(x).tickFormat(d3.timeFormat(tickFormat))
+    xAxis = d3.axisBottom().scale(x).tickFormat(d3.timeFormat("%b %d"))
       .tickSize(8).tickPadding(8);
 
     yAxis = d3.axisLeft().scale(y).tickSize(0);
   };
 
-  function gantt(t) {
-
-    tasks = t;
+  function gantt() {
+    
     initTimeDomain();
     initAxis();
 
@@ -87,7 +96,7 @@ d3.gantt = function(w, h, base_group_id) {
       }) 
       .attr("y", 0)
       .attr("transform", rectTransform)
-      .attr("height", function(d) { return 70; })
+      .attr("height", function(d) { return (height - ((margin.top + margin.bottom)*2))/tasks.length; })
       .attr("width", function(d) { 
         return (x(d.endDate) - x(d.startDate)); 
       });
@@ -159,17 +168,11 @@ d3.gantt = function(w, h, base_group_id) {
     return gantt;
   };
 
-    /**
-  * @param {string}
-  *                vale The value can be "fit" - the domain fits the data or
-  *                "fixed" - fixed domain.
-  */
   gantt.timeDomainMode = function(value) {
     if (!arguments.length)
       return timeDomainMode;
     timeDomainMode = value;
     return gantt;
-
   };
 
   gantt.taskTypes = function(value) {
